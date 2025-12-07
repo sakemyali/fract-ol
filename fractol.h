@@ -1,26 +1,42 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractol.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mosakura <mosakura@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 02:27:34 by mosakura          #+#    #+#             */
+/*   Updated: 2025/12/08 04:49:13 by mosakura         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
 
-# include "minilibx/mlx.h"
+# include <unistd.h>
+# include "minilibx-linux/mlx.h"
 # include <math.h>
 # include <pthread.h>
+# include <stdlib.h>
+
+# define WRITE_MAX 2147479552
 
 # define SIZE 700
 # define THREAD_WIDTH 7
 # define THREAD_NUMBER 100
 
-# define ESC 53
-# define UP 126
-# define DOWN 125
-# define LEFT 123
-# define RIGHT 124
-# define R 15
-# define C 8
-# define H 4
-# define J 38
-# define P 35
-# define M 46
+# define ESC 65307
+# define UP 65362
+# define DOWN 65364
+# define LEFT 65361
+# define RIGHT 65363
+
+# define R 114
+# define C 99
+# define H 104
+# define J 106
+# define P 112
+# define M 109
 
 # define SCROLL_UP 4
 # define SCROLL_DOWN 5
@@ -63,5 +79,13 @@ int			mouse_hook(int mouse_code, int x, int y, t_fractal *fractal);
 void		*draw_mandelbrot(void *fractal_void);
 void		draw_julia(t_fractal *fractal);
 void		draw_burning_ship(t_fractal *fractal);
+void		ft_putendl_fd(char *s, int fd);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+int			ft_isdigit(int c);
+double		ft_atof(const char *s);
+int			check_args(int argc);
+void		init_hooks(t_fractal *fractal);
+int			ft_is_valid_float(const char *s);
+int			exit_error(t_fractal *fractal);
 
 #endif

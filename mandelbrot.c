@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mandelbrot.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mosakura <mosakura@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 02:27:55 by mosakura          #+#    #+#             */
+/*   Updated: 2025/12/08 02:55:23 by mosakura         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
 
@@ -6,7 +17,7 @@ void	calculate_mandelbrot(t_fractal *fractal)
 	int		i;
 	double	x_temp;
 
-	fractal->name = "mandel";
+	fractal->name = "mandelbrot";
 	i = 0;
 	fractal->zx = 0.0;
 	fractal->zy = 0.0;

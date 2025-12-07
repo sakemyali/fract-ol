@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mosakura <mosakura@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 02:27:41 by mosakura          #+#    #+#             */
+/*   Updated: 2025/12/08 04:33:31 by mosakura         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
 
@@ -21,4 +32,10 @@ void	init_mlx(t_fractal *fractal)
 			&fractal->bits_per_pixel,
 			&fractal->size_line,
 			&fractal->endian);
+}
+
+int	exit_error(t_fractal *fractal)
+{
+	free(fractal);
+	exit(1);
 }
