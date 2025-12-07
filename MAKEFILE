@@ -1,34 +1,29 @@
-NAME = fractol
-CC = gcc
-SRCS = events.c init.c main.c math_utils.c render.c string_utils.c
-OBJDIR = obj
-OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
-DEPS = $(OBJS:.o=.d)
+# Simple Makefile for fract-ol (minimal, like the provided example)
 
-CFLAGS = -Wall -Wextra -Werror -O2 -g -MMD -MP
-CPPFLAGS = -I.
-LDFLAGS =
+NAME = fractol
+SRCS = events.c init.c main.c math_utils.c render.c string_utils.c
+OBJS = $(SRCS:.c=.o)
+
+CC = cc
+CFLAGS = -Wall -Werror -Wextra -I.
+
+# Link against minilibx (adjust if your mlx requires extra flags)
 LDLIBS = -Lminilibx-linux -lmlx -lm
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
+	$(CC) -o $@ $(OBJS) $(LDLIBS)
 
-$(OBJDIR)/%.o: %.c | $(OBJDIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
-
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+%.o: %.c fractol.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) -r $(OBJDIR)
+	rm -f $(OBJS)
 
 fclean: clean
-	$(RM) $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
-
--include $(DEPS)
 
 .PHONY: all clean fclean re
