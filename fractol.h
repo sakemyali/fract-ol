@@ -5,71 +5,9 @@
 # include <stdlib.h> //malloc free
 # include <unistd.h> // write
 # include <math.h>
-# ifdef __linux__
-#  include <X11/X.h>
-#  include <X11/keysym.h>
-# endif
-# include "minilibx_opengl_20191021/mlx.h"
-
-# ifndef __linux__
-/* Minimal event/key/button definitions for non-Linux builds (macOS fallback)
- * These are only used to allow compilation and basic key comparisons. */
-#  ifndef KeyPress
-#   define KeyPress 2
-#  endif
-#  ifndef ButtonPress
-#   define ButtonPress 4
-#  endif
-#  ifndef DestroyNotify
-#   define DestroyNotify 17
-#  endif
-#  ifndef MotionNotify
-#   define MotionNotify 6
-#  endif
-#  ifndef KeyPressMask
-#   define KeyPressMask (1L<<0)
-#  endif
-#  ifndef ButtonPressMask
-#   define ButtonPressMask (1L<<2)
-#  endif
-#  ifndef StructureNotifyMask
-#   define StructureNotifyMask (1L<<17)
-#  endif
-#  ifndef PointerMotionMask
-#   define PointerMotionMask (1L<<6)
-#  endif
-
-/* Keysyms used by the app */
-#  ifndef XK_Escape
-#   define XK_Escape 0xFF1B
-#  endif
-#  ifndef XK_Left
-#   define XK_Left 0xFF51
-#  endif
-#  ifndef XK_Right
-#   define XK_Right 0xFF53
-#  endif
-#  ifndef XK_Up
-#   define XK_Up 0xFF52
-#  endif
-#  ifndef XK_Down
-#   define XK_Down 0xFF54
-#  endif
-#  ifndef XK_plus
-#   define XK_plus 0x002B
-#  endif
-#  ifndef XK_minus
-#   define XK_minus 0x002D
-#  endif
-
-/* Mouse wheel buttons */
-#  ifndef Button4
-#   define Button4 4
-#  endif
-#  ifndef Button5
-#   define Button5 5
-#  endif
-# endif
+# include <X11/X.h>
+# include <X11/keysym.h>
+# include "minilibx-linux/mlx.h"
 
 
 #define ERROR_MESSAGE "Please enter \n\t\"./fractol mandelbrot\" or \n\t\"./fractol julia <value_1> <value_2>\"\n"
@@ -171,28 +109,27 @@ typedef struct	s_fractal
  * They are basically IOUs to the compiler
 */
 //*** strings utils ***
-//*** strings utils ***
 int		ft_strncmp(char *s1, char *s2, int n);
-void	ft_putstr_fd(char *s, int fd);
-double	ft_atod(char *s);
+void    putstr_fd(char *s, int fd);
+double  atodbl(char *s);
 
 //*** init ***
-void	fractol_init(t_fractal *fractal);
+void    fractal_init(t_fractal *fractal);
 
 //*** render ***
-void	fractol_render(t_fractal *fractal);
+void    fractal_render(t_fractal *fractal);
 
 //*** math ***
-double	ft_map(double unscaled_num, double new_min, double new_max, double old_min, double old_max);
-t_complex	complex_add(t_complex z1, t_complex z2);
-t_complex	complex_square(t_complex z);
+double		map(double unscaled_num, double new_min, double new_max, double old_min, double old_max);
+t_complex   sum_complex(t_complex z1, t_complex z2);
+t_complex   square_complex(t_complex z);
 
 //*** hooks_events ***
-int		handle_key(int keysym, t_fractal *fractal);
+int			key_handler(int keysym, t_fractal *fractal);
 
 //*** clean_up ***
-int		handle_close(t_fractal *fractal);
-int		handle_mouse(int button, int x, int y, t_fractal *fractal);
-int		handle_julia_motion(int x, int y, t_fractal *fractal);
+int    	close_handler(t_fractal *fractal);
+int		mouse_handler(int button, int x, int y, t_fractal *fractal);
+int		julia_track(int x, int y, t_fractal *fractal);
 
 #endif

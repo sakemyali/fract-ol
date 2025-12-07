@@ -1,5 +1,5 @@
 #include "fractol.h"
-#include "minilibx_opengl_20191021/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -27,23 +27,26 @@ static void	data_init(t_fractal *fractal)
 
 static void	events_init(t_fractal *fractal)
 {
-    /* Use mlx_key_hook for portability across macOS/Linux MLX variants */
-    mlx_key_hook(fractal->mlx_window, handle_key, fractal);
-    mlx_hook(fractal->mlx_window,
-	    ButtonPress,
-	    ButtonPressMask,
-	    handle_mouse,
-	    fractal);
-    mlx_hook(fractal->mlx_window,
-	    DestroyNotify,
-	    StructureNotifyMask,
-	    handle_close,
-	    fractal);
-    mlx_hook(fractal->mlx_window,
-	    MotionNotify,
-	    PointerMotionMask,
-	    handle_julia_motion,
-	    fractal);
+	mlx_hook(fractal->mlx_window,
+			KeyPress,
+			KeyPressMask,
+			key_handler,
+			fractal);
+	mlx_hook(fractal->mlx_window,
+			ButtonPress,
+			ButtonPressMask,
+			mouse_handler,
+			fractal);
+	mlx_hook(fractal->mlx_window,
+			DestroyNotify,
+			StructureNotifyMask,
+			close_handler,
+			fractal);
+	mlx_hook(fractal->mlx_window,
+			MotionNotify,
+			PointerMotionMask,
+			julia_track,
+			fractal);
 }
 
 /*
@@ -52,7 +55,7 @@ static void	events_init(t_fractal *fractal)
  * ~listening events
  * ~hooks data
 */
-void	fractol_init(t_fractal *fractal)
+void	fractal_init(t_fractal *fractal)
 {
 	//MLX stuff
 	fractal->mlx_connection = mlx_init();
@@ -64,6 +67,7 @@ void	fractol_init(t_fractal *fractal)
 										fractal->name);
 	if (NULL == fractal->mlx_window)
 	{
+		mlx_destroy_display(fractal->mlx_connection);
 		free(fractal->mlx_connection);
 		malloc_error();
 	}
@@ -72,6 +76,7 @@ void	fractol_init(t_fractal *fractal)
 	if (NULL == fractal->img.img_ptr)
 	{
 		mlx_destroy_window(fractal->mlx_connection, fractal->mlx_window);
+		mlx_destroy_display(fractal->mlx_connection);
 		free(fractal->mlx_connection);
 		malloc_error();
 	}

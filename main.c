@@ -17,7 +17,7 @@
 */
 
 #include "fractol.h"
-#include "minilibx_opengl_20191021/mlx.h"
+#include "minilibx-linux/mlx.h"
 
 /*
  * I HAVE 2 KINDA PROMPTS
@@ -33,27 +33,27 @@ int	main(int ac, char **av)
 	t_fractal	fractal;
 
 
-	if ((2 == ac && !ft_strncmp(av[1], "mandelbrot", 10))
-		|| (4 == ac && !ft_strncmp(av[1], "julia", 5)))
+	if (2 == ac && !ft_strncmp(av[1], "mandelbrot", 10)
+		|| 4 == ac && !ft_strncmp(av[1], "julia", 5))
 	{
 		fractal.name = av[1];
 		if (!ft_strncmp(fractal.name, "julia", 5))
 		{
-			fractal.julia_x = ft_atod(av[2]);
-			fractal.julia_y = ft_atod(av[3]);
+			fractal.julia_x = atodbl(av[2]);
+			fractal.julia_y = atodbl(av[3]);
 		}
 		//TL;DR
 		//Prompt correct, kick off the application
 		//1)
-	fractol_init(&fractal);
+		fractal_init(&fractal);
 		//2)
-	fractol_render(&fractal);
+		fractal_render(&fractal);
 		//3)
 		mlx_loop(fractal.mlx_connection);
 	}
 	else
 	{
-		ft_putstr_fd(ERROR_MESSAGE, STDERR_FILENO);
+		putstr_fd(ERROR_MESSAGE, STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 }
