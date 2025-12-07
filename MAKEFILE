@@ -1,24 +1,39 @@
-NAME = fractol
-SRCS = events.c init.c main.c math_utils.c render.c string_utils.c
-OBJS = $(SRCS:.c=.o)
+GREEN = \033[0;32m
+RED = \033[0;31m
+RESET = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I.
+CFLAGS = -Wall -Werror -Wextra
+MLX_PATH = /minilibx-linux
 
-LDLIBS = -Lminilibx-linux -lmlx_linux -lX11 -lXext
+SRCS		= burning_ship.c \
+			  draw.c \
+			  init.c \
+			  julia.c \
+			  main.c \
+			  mandelbrot.c \
+			  mouse_and_key.c \
+			  utils.c
 
-# gcc *.c -Lminilibx-linux -lmlx_Linux -lX11 -lXext -o fractol
+OBJS		= $(SRCS:.c=.o)
+
+MLX = $(MLX_PATH)/libmlx.a
+
+NAME = fractol
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDLIBS)
+%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
 
-%.o: %.c fractol.h
-	$(CC) $(CFLAGS) -c $< -o $@
+$(NAME): $(OBJS) $(MLX)
+	$(CC) $(CFLAGS) -o $@ $^ -lft -L$(MLX_PATH) -lmlx -framework OpenGL -framework AppKit
+
+$(MLX):
+	make -C $(MLX_PATH)
 
 clean:
-	rm -f $(OBJS)
+	rm -r $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)

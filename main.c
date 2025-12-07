@@ -1,59 +1,48 @@
-/*
- * PROJECT
- *
- * ~Julia and Mandelbrot
- * ~Infinite Zoom
- * ~Able to take command line args to disipline
- * 		which fractal render
- * ~Able to take command line args to shape Julia, i.e x y coordinates
- * ~ESC closes the process with no leaks
- * ~Click on the X window, closes the process leaks free
- *
- * * 🚨 Code has to be norminetted 🚨
- * 		~there are comments everywhere for clarity
- * 		~i go always on the next line to better see the function inputs
- * 		tldr->Don't git clone and push.
-
-*/
 
 #include "fractol.h"
-#include "minilibx-linux/mlx.h"
 
-/*
- * I HAVE 2 KINDA PROMPTS
- * 		~./fractol mandelbrot
- * 		~./fractol julia <real> <i>
- *
- * 	The main function is a TL,DR
- * 	of your application
- *
-*/
-int	main(int ac, char **av)
+int	draw_fractal(t_fractal *fractal, char *query)
 {
-	t_fractal	fractal;
-
-
-	if (2 == ac && !ft_strncmp(av[1], "mandelbrot", 10)
-		|| 4 == ac && !ft_strncmp(av[1], "julia", 5))
+	if (ft_strncmp(query, "mandel", 7) == 0)
+		draw_mandelbrot(fractal);
+	else if (ft_strncmp(query, "julia", 6) == 0)
 	{
-		fractal.name = av[1];
-		if (!ft_strncmp(fractal.name, "julia", 5))
+		if (!fractal->cx && !fractal->cy)
 		{
-			fractal.julia_x = atodbl(av[2]);
-			fractal.julia_y = atodbl(av[3]);
+			fractal->cx = -0.745429;
+			fractal->cy = 0.05;
 		}
-		//TL;DR
-		//Prompt correct, kick off the application
-		//1)
-		fractal_init(&fractal);
-		//2)
-		fractal_render(&fractal);
-		//3)
-		mlx_loop(fractal.mlx_connection);
+		draw_julia(fractal);
 	}
+	else if (ft_strncmp(query, "ship", 5) == 0)
+		draw_burning_ship(fractal);
 	else
 	{
-		putstr_fd(ERROR_MESSAGE, STDERR_FILENO);
-		exit(EXIT_FAILURE);
+		ft_putendl_fd("Available fractals: mandel, julia, ship", 1);
+		exit_fractal(fractal);
 	}
+	mlx_put_image_to_window(fractal->mlx, fractal->window, fractal->image, 0,
+		0);
+	return (0);
+}
+
+int	main(int argc, char **argv)
+{
+	t_fractal	*fractal;
+
+	if (argc != 2)
+	{
+		ft_putendl_fd("Usage: ./fractol <fractal>", 1);
+		ft_putendl_fd("Available fractals: mandelbrot, julia, burningship", 1);
+		return (0);
+	}
+	fractal = malloc(sizeof(t_fractal));
+	init_fractal(fractal);
+	init_mlx(fractal);
+	mlx_key_hook(fractal->window, key_hook, fractal);
+	mlx_mouse_hook(fractal->window, mouse_hook, fractal);
+	mlx_hook(fractal->window, 17, 0L, exit_fractal, fractal);
+	draw_fractal(fractal, argv[1]);
+	mlx_loop(fractal->mlx);
+	return (0);
 }
