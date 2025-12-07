@@ -1,0 +1,34 @@
+NAME = fractol
+CC = gcc
+SRCS = events.c init.c main.c math_utils.c render.c string_utils.c
+OBJDIR = obj
+OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
+DEPS = $(OBJS:.o=.d)
+
+CFLAGS = -Wall -Wextra -Werror -O2 -g -MMD -MP
+CPPFLAGS = -I.
+LDFLAGS =
+LDLIBS = -Lminilibx-linux -lmlx -lm
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
+
+$(OBJDIR)/%.o: %.c | $(OBJDIR)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+clean:
+	$(RM) -r $(OBJDIR)
+
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all clean fclean re
