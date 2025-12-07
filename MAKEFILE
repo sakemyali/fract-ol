@@ -1,11 +1,38 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    MAKEFILE                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mosakura <mosakura@student.42tokyo.jp>     +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/11/28 14:46:44 by mosakura          #+#    #+#              #
-#    Updated: 2025/11/28 14:46:45 by mosakura         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -I. -I./minilibx_opengl_20191021
+
+SRCS = $(wildcard *.c)
+OBJS = $(SRCS:.c=.o)
+
+NAME = fractol
+MLX_DIR = minilibx_opengl_20191021
+
+.PHONY: all clean fclean re
+
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+    MLX_LIB = $(MLX_DIR)/libmlx.a
+    LDFLAGS = -framework OpenGL -framework AppKit
+else
+    MLX_LIB = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+    LDFLAGS =
+endif
+
+all: $(NAME)
+
+# Link the binary from object files
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(MLX_LIB) $(LDFLAGS) -o $(NAME)
+
+# Compile C sources into object files
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
